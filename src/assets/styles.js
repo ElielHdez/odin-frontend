@@ -5,9 +5,7 @@ const styles = {
         height: "100vh",
         backgroundColor:
         OdinTheme.fog,
-        padding: 8,
-        alignItems: "center",
-        justifyContent: "center"
+        padding: 16,
     }
 };
 

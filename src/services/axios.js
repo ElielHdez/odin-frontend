@@ -6,4 +6,7 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 const getGroups = () => axios.get("/groups")
     .then(result => result);
 
-export default getGroups;
+const getCurrentSession = (groupId) => axios.get(`/sessions?groupId=${groupId}`)
+    .then(result => result);
+
+export {getGroups, getCurrentSession};
