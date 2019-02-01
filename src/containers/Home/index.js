@@ -30,7 +30,8 @@ class HomeContainer extends React.Component {
         getCurrentSession(groupId)
             .then(response => {
                 localStorage.setItem("currentSession", JSON.stringify(response.data.currentSession.attributes));
-                // return <Redirect to='/session' />
+                localStorage.setItem("currentGroupId", groupId);
+                localStorage.setItem("currentSessionNumber", response.data.currentSession.attributes.sessionNumber);
                 this.props.history.push(`/session`)
             })
             .catch(error => console.log(error))
