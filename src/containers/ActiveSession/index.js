@@ -1,6 +1,7 @@
 import React from "react";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ActiveSessionLayout from "./layout";
+import {sendSessionGrades} from "../../services/axios";
 
 class ActiveSessionContainer extends React.Component {
 
@@ -9,6 +10,7 @@ class ActiveSessionContainer extends React.Component {
         this.state = {
             loading: true,
             students: [],
+            studentFeedback: {}
         }
     };
 
@@ -21,23 +23,88 @@ class ActiveSessionContainer extends React.Component {
         this.setState({ students: currentSession.students, loading: false})
     };
 
-    /*storeEvaluations = (type, input) => {
-        console.log("test: ", type + input)
-    };*/
+    bundleStudentsPerformance = (
+        studentId,
+        studentName,
+        staffRole,
+        pronunciationPoints,
+        pronunciationFeedback,
+        pronunciationGoal,
+        comprehensionPoints,
+        comprehensionFeedback,
+        comprehensionGoal,
+        grammarPoints,
+        grammarFeedback,
+        grammarGoal,
+        vocabularyPoints,
+        vocabularyFeedback,
+        vocabularyGoal
+    ) => {
+        const { studentFeedback } = this.state;
+        const staffMember = localStorage.getItem("staffLogged");
+        const studentBundle = {
+            name: studentName,
+            feedback: {
+                pronunciation: {
+                    [staffRole]: {
+                        points: pronunciationPoints,
+                        comments: pronunciationFeedback,
+                        ...staffRole === staffMember && { nextGoal: pronunciationGoal }
+                    }
+                },
+                comprehension: {
+                    [staffRole]: {
+                        points: comprehensionPoints,
+                        comments: comprehensionFeedback,
+                        ...staffRole === staffMember && { nextGoal: comprehensionGoal }
+                    }
+                },
+                grammar: {
+                    [staffRole]: {
+                        points: grammarPoints,
+                        comments: grammarFeedback,
+                        ...staffRole === staffMember && { nextGoal: grammarGoal }
+                    }
+                },
+                vocabulary: {
+                    [staffRole]: {
+                        points: vocabularyPoints,
+                        comments: vocabularyFeedback,
+                        ...staffRole === staffMember && { nextGoal: vocabularyGoal }
+                    }
+                }
+            }
+        };
+        if (!studentFeedback[studentId]) {
+            studentFeedback[studentId] = studentBundle;
+            this.setState({ studentFeedback })
+        }
+    };
 
-    /*sendEvaluations = () => {
+    sendEvaluations = () => {
+        const { history } = this.props;
+        const { studentFeedback } = this.state;
+        const groupId = localStorage.getItem("currentGroupId");
+        const currentSessionNumber = localStorage.getItem("currentSessionNumber");
+        const professorId = (localStorage.getItem("staffLogged") === "Professor" ? "Professor" : null);
+        const mentorId = (localStorage.getItem("staffLogged") === "Mentor" ? "Mentor" : null);
 
-            .then(data => {
-                JSON.parse(data);
-                console.log("Data ready to be sent: ", data);
-            });
-    };*/
+        sendSessionGrades({
+            groupId,
+            currentSessionNumber,
+            ...professorId && { professorId },
+            ...mentorId && { mentorId },
+            studentFeedback
+        })
+            .then(() => history.push(`/`))
+            .catch((error) => console.log(error));
+    };
 
     render () {
         const { loading, students } = this.state;
         const studentsList = [];
         for (const individual of Object.keys(students)) {
-            studentsList.push(students[individual]);
+            studentsList.push({...students[individual], ...{id: individual }});
         }
         if (loading) {
             return <CircularProgress />
@@ -45,8 +112,8 @@ class ActiveSessionContainer extends React.Component {
         return (
             <ActiveSessionLayout
                 students={studentsList}
-                // evaluateStudent={this.storeEvaluations}
-                // onSave={this.sendEvaluations}
+                evaluateStudent={this.bundleStudentsPerformance}
+                onEnd={this.sendEvaluations}
             />
         );
     }
