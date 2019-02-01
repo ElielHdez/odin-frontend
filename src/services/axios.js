@@ -9,4 +9,12 @@ const getGroups = () => axios.get("/groups")
 const getCurrentSession = (groupId) => axios.get(`/sessions?groupId=${groupId}`)
     .then(result => result);
 
-export {getGroups, getCurrentSession};
+const sendSessionGrades = ({groupId, currentSessionNumber, professorId = null, mentorId = null, studentFeedback}) => axios.put(`/sessions`, {
+    groupId,
+    currentSessionNumber,
+    ...professorId && { professorId },
+    ...mentorId && { mentorId },
+    studentFeedback
+}).then(result => result);
+
+export {getGroups, getCurrentSession, sendSessionGrades};
