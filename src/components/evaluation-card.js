@@ -8,7 +8,6 @@ import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
 import PropTypes from "prop-types";
 
 class EvaluationCard extends React.Component {
@@ -16,165 +15,212 @@ class EvaluationCard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: true,
-            pronunciationPoints: "",
-            pronunciationFeedback: "",
-            comprehensionPoints: "",
-            comprehensionFeedback: "",
-            grammarPoints: "",
-            grammarFeedback: "",
-            vocabularyPoints: "",
-            vocabularyFeedback: ""
+            pronunciationPoints: "90",
+            pronunciationFeedback: "Pronunc",
+            pronunciationGoal: "",
+            comprehensionPoints: "91",
+            comprehensionFeedback: "comp",
+            comprehensionGoal: "",
+            grammarPoints: "78",
+            grammarFeedback: "grammar",
+            grammarGoal: "",
+            vocabularyPoints: "78",
+            vocabularyFeedback: "vocab",
+            vocabularyGoal: ""
         }
+    };
+
+    handleStudentGrades = () => {
+        const { studentId, studentName, onGrade } = this.props;
+        const staffRole = localStorage.getItem("staffLogged");
+        const {
+            pronunciationPoints,
+            pronunciationFeedback,
+            pronunciationGoal,
+            comprehensionPoints,
+            comprehensionFeedback,
+            comprehensionGoal,
+            grammarPoints,
+            grammarFeedback,
+            grammarGoal,
+            vocabularyPoints,
+            vocabularyFeedback,
+            vocabularyGoal
+        } = this.state;
+        const groupId = localStorage.getItem("currentGroupId");
+        onGrade(
+            studentId,
+            studentName,
+            staffRole,
+            groupId,
+            pronunciationPoints,
+            pronunciationFeedback,
+            pronunciationGoal,
+            comprehensionPoints,
+            comprehensionFeedback,
+            comprehensionGoal,
+            grammarPoints,
+            grammarFeedback,
+            grammarGoal,
+            vocabularyPoints,
+            vocabularyFeedback,
+            vocabularyGoal
+        )
     };
 
     pronunciationPointsHandler = (points) => this.setState({ pronunciationPoints: points });
 
     pronunciationFeedbackHandler = (feedback) => this.setState({ pronunciationFeedback: feedback });
 
+    pronunciationGoalHandler = (goal) => this.setState({ pronunciationGoal: goal });
+
     comprehensionPointsHandler = (points) => this.setState({ comprehensionPoints: points });
 
     comprehensionFeedbackHandler = (feedback) => this.setState({ comprehensionFeedback: feedback });
+
+    comprehensionGoalHandler = (goal) => this.setState({ comprehensionGoal: goal });
 
     grammarPointsHandler = (points) => this.setState({ grammarPoints: points });
 
     grammarFeedbackHandler = (feedback) => this.setState({ grammarFeedback: feedback });
 
+    grammarGoalHandler = (goal) => this.setState({ grammarGoal: goal });
+
     vocabularyPointsHandler = (points) => this.setState({ vocabularyPoints: points });
 
     vocabularyFeedbackHandler = (feedback) => this.setState({ vocabularyFeedback: feedback });
 
-    pronunciationDrawer = () => {
-        const { pronunciationPoints, pronunciationFeedback } = this.state;
+    vocabularyGoalHandler = (goal) => this.setState({ vocabularyGoal: goal });
+
+    categoryAvatar = (category) => {
         return (
-            <div style={{ marginTop: 8 }}>
-                <Typography>
-                    Pronunciation
-                </Typography>
-                <div style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                    <TextField
-                        id="outlined"
-                        label="Points"
-                        defaultValue={pronunciationPoints}
-                        variant="outlined"
-
-                    />
-                    <TextField
-                        id="outlined"
-                        label="Feedback"
-                        defaultValue={pronunciationFeedback}
-                        variant="outlined"
-
-                    />
-                </div>
-                <Card.Actions>
-                    <Button onClick={() => this.drawerVisibilityToggler()} >
-                        Ocultar campos
-                    </Button>
-                </Card.Actions>
-            </div>
+            <Avatar aria-label="Recipe">
+                {category}
+            </Avatar>
         );
     };
 
-    comprehensionDrawer = () => {
-        const { comprehensionPoints, comprehensionFeedback } = this.state;
+    inputPoints = (pointsHandler) => {
         return (
-            <div style={{ marginTop: 8 }}>
-                <Typography>
-                    Comprehension
-                </Typography>
-                <div style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                    <TextField
-                        id="outlined"
-                        label="Points"
-                        defaultValue={comprehensionPoints}
-                        variant="outlined"
-
-                    />
-                    <TextField
-                        id="outlined"
-                        label="Feedback"
-                        defaultValue={comprehensionFeedback}
-                        variant="outlined"
-
-                    />
-                </div>
-                <Card.Actions>
-                    <Button onPress={() => this.drawerVisibilityToggler()} >
-                        Ocultar campos
-                    </Button>
-                </Card.Actions>
-            </div>
+            <TextField
+                id="outlined"
+                label="Points"
+                variant="outlined"
+                inputProps={{
+                    type: "number",
+                    maxLength: 2
+                }}
+                style={{ flex: 1, margin: 4 }}
+                onChange={(points) => pointsHandler(points.target.value)}
+            />
         );
     };
 
-    grammarDrawer = () => {
-        const { grammarPoints, grammarFeedback } = this.state;
+    inputFeedback = (feedbackHandler) => {
         return (
-            <div style={{ marginTop: 8 }}>
-                <Typography>
-                    Grammar
-                </Typography>
-                <div style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                    <TextField
-                        id="outlined"
-                        label="Points"
-                        defaultValue={grammarPoints}
-                        variant="outlined"
-
-                    />
-                    <TextField
-                        id="outlined"
-                        label="Feedback"
-                        defaultValue={grammarFeedback}
-                        variant="outlined"
-
-                    />
-                </div>
-                <Card.Actions>
-                    <Button onPress={() => this.drawerVisibilityToggler()} >
-                        Ocultar campos
-                    </Button>
-                </Card.Actions>
-            </div>
+            <TextField
+                id="outlined"
+                label="Feedback"
+                variant="outlined"
+                style={{ flex: 3, margin: 4 }}
+                onChange={(feedback) => feedbackHandler(feedback.target.value)}
+            />
         );
     };
 
-    vocabularyDrawer = () => {
-        const { vocabularyPoints, vocabularyFeedback } = this.state;
+    inputGoal = (goalHandler) => {
         return (
-            <div style={{ marginTop: 8 }}>
-                <Typography>
-                    Vocabulary
-                </Typography>
-                <div style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                    <TextField
-                        id="outlined"
-                        label="Points"
-                        defaultValue={vocabularyPoints}
-                        variant="outlined"
-
-                    />
-                    <TextField
-                        id="outlined"
-                        label="Feedback"
-                        defaultValue={vocabularyFeedback}
-                        variant="outlined"
-
-                    />
-                </div>
-                <Card.Actions>
-                    <Button onPress={() => this.drawerVisibilityToggler()} >
-                        Ocultar campos
-                    </Button>
-                </Card.Actions>
-            </div>
+            <TextField
+                id="outlined"
+                label="Goal for next session"
+                variant="outlined"
+                style={{ margin: 4 }}
+                fullWidth
+                onChange={(goal) => goalHandler(goal.target.value)}
+            />
         );
+    };
+
+    renderEvaluationInputs = (category) => {
+        const staffLogged = localStorage.getItem("staffLogged");
+        if (category === "P") {
+            return (
+                <div>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center"
+                        }}
+                        key={category}
+                    >
+                        {this.categoryAvatar(category)}
+                        {this.inputPoints(this.pronunciationPointsHandler)}
+                        {this.inputFeedback(this.pronunciationFeedbackHandler)}
+                    </div>
+                    {staffLogged === "Mentor" && this.inputGoal(this.pronunciationGoalHandler)}
+                </div>
+            )
+        } else if (category === "C") {
+            return (
+                <div>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center"
+                        }}
+                        key={category}
+                    >
+                        {this.categoryAvatar(category)}
+                        {this.inputPoints(this.comprehensionPointsHandler)}
+                        {this.inputFeedback(this.comprehensionFeedbackHandler)}
+                    </div>
+                    {staffLogged === "Mentor" && this.inputGoal(this.comprehensionGoalHandler)}
+                </div>
+            )
+        } else if (category === "G") {
+            return (
+                <div>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center"
+                        }}
+                        key={category}
+                    >
+                        {this.categoryAvatar(category)}
+                        {this.inputPoints(this.grammarPointsHandler)}
+                        {this.inputFeedback(this.grammarFeedbackHandler)}
+                    </div>
+                    {staffLogged === "Mentor" && this.inputGoal(this.grammarGoalHandler)}
+
+                </div>
+            )
+        } else if (category === "V") {
+            return (
+                <div>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center"
+                        }}
+                        key={category}
+                    >
+                        {this.categoryAvatar(category)}
+                        {this.inputPoints(this.vocabularyPointsHandler)}
+                        {this.inputFeedback(this.vocabularyFeedbackHandler)}
+                    </div>
+                    {staffLogged === "Mentor" && this.inputGoal(this.vocabularyGoalHandler)}
+                </div>
+            )
+        }
     };
 
     render() {
-        const { name } = this.props;
-        const { isDrawerVisible, activeTab } = this.state;
+        const { studentName } = this.props;
         const categories = ["P", "C", "G", "V"];
         return (
             <Card>
@@ -189,53 +235,20 @@ class EvaluationCard extends React.Component {
                             <MoreVertIcon />
                         </IconButton>
                     }
-                    title={name}
+                    title={studentName}
                     subheader="Intereses"
                 />
                 <CardContent>
                     <div style={{ display: "flex", flexDirection: "column" }}>
                         {
-                            categories.map(categoryInitial => {
-                                return (
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            flexDirection: "row",
-                                            alignItems: "center",
-                                            justifyContent: "space-between"
-                                        }}
-                                        key={categoryInitial}
-                                    >
-                                        <Avatar aria-label="Recipe">
-                                            {categoryInitial}
-                                        </Avatar>
-                                        <TextField
-                                            id="outlined"
-                                            label="Points"
-                                            defaultValue={""}
-                                            variant="outlined"
-                                            margin="none"
-                                            notched
-                                            style={{ flex: 1 }}
-                                        />
-                                        <TextField
-                                            id="outlined"
-                                            label="Feedback"
-                                            defaultValue={""}
-                                            variant="outlined"
-                                            style={{ flex: 3 }}
-                                        />
-                                    </div>
-                                )
+                            categories.map(category => {
+                                return this.renderEvaluationInputs(category)
                             })
                         }
                     </div>
-                    {
-                        isDrawerVisible && activeTab && this.renderDrawer()
-                    }
                 </CardContent>
                 <CardActions>
-                    <Button fullWidth variant={"contained"}>
+                    <Button fullWidth variant={"contained"} onClick={this.handleStudentGrades}>
                         Guardar evaluación
                     </Button>
                 </CardActions>
@@ -246,7 +259,9 @@ class EvaluationCard extends React.Component {
 
 
 EvaluationCard.propTypes = {
-    name: PropTypes.string.isRequired,
+    studentId: PropTypes.string.isRequired,
+    studentName: PropTypes.string.isRequired,
+    onGrade: PropTypes.func.isRequired
 };
 
 export default EvaluationCard;
