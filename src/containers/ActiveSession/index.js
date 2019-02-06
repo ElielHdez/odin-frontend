@@ -41,7 +41,6 @@ class ActiveSessionContainer extends React.Component {
         vocabularyGoal
     ) => {
         const { studentFeedback } = this.state;
-        const staffMember = localStorage.getItem("staffLogged");
         const studentBundle = {
             name: studentName,
             feedback: {
@@ -49,28 +48,28 @@ class ActiveSessionContainer extends React.Component {
                     [staffRole]: {
                         points: pronunciationPoints,
                         comments: pronunciationFeedback,
-                        ...staffRole === staffMember && { nextGoal: pronunciationGoal }
+                        ...staffRole === "Mentor" && { nextGoal: pronunciationGoal }
                     }
                 },
                 comprehension: {
                     [staffRole]: {
                         points: comprehensionPoints,
                         comments: comprehensionFeedback,
-                        ...staffRole === staffMember && { nextGoal: comprehensionGoal }
+                        ...staffRole === "Mentor" && { nextGoal: comprehensionGoal }
                     }
                 },
                 grammar: {
                     [staffRole]: {
                         points: grammarPoints,
                         comments: grammarFeedback,
-                        ...staffRole === staffMember && { nextGoal: grammarGoal }
+                        ...staffRole === "Mentor" && { nextGoal: grammarGoal }
                     }
                 },
                 vocabulary: {
                     [staffRole]: {
                         points: vocabularyPoints,
                         comments: vocabularyFeedback,
-                        ...staffRole === staffMember && { nextGoal: vocabularyGoal }
+                        ...staffRole === "Mentor" && { nextGoal: vocabularyGoal }
                     }
                 }
             }

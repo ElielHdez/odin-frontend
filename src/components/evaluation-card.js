@@ -47,12 +47,10 @@ class EvaluationCard extends React.Component {
             vocabularyFeedback,
             vocabularyGoal
         } = this.state;
-        const groupId = localStorage.getItem("currentGroupId");
         onGrade(
             studentId,
             studentName,
             staffRole,
-            groupId,
             pronunciationPoints,
             pronunciationFeedback,
             pronunciationGoal,
@@ -221,7 +219,9 @@ class EvaluationCard extends React.Component {
 
     render() {
         const { studentName } = this.props;
+        const { studentInterests } = this.props;
         const categories = ["P", "C", "G", "V"];
+        console.log(this.props);
         return (
             <Card>
                 <CardHeader
@@ -236,7 +236,7 @@ class EvaluationCard extends React.Component {
                         </IconButton>
                     }
                     title={studentName}
-                    subheader="Intereses"
+                    subheader={studentInterests.join(", ")}
                 />
                 <CardContent>
                     <div style={{ display: "flex", flexDirection: "column" }}>
@@ -261,6 +261,7 @@ class EvaluationCard extends React.Component {
 EvaluationCard.propTypes = {
     studentId: PropTypes.string.isRequired,
     studentName: PropTypes.string.isRequired,
+    studentInterests: PropTypes.array.isRequired,
     onGrade: PropTypes.func.isRequired
 };
 

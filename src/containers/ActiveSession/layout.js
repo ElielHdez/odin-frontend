@@ -13,6 +13,7 @@ const ActiveSessionLayout = (props) => (
                         <EvaluationCard
                             studentId={student.id}
                             studentName={student.name}
+                            studentInterests={student.interests}
                             key={student.groupId}
                             onGrade={props.evaluateStudent}
                         />
